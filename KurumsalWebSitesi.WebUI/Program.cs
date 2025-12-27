@@ -1,4 +1,5 @@
 using KurumsalWebSitesi.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace KurumsalWebSitesi.WebUI
 {
@@ -13,13 +14,14 @@ namespace KurumsalWebSitesi.WebUI
 
             builder.Services.AddDbContext<DatabaseContext>();
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -27,6 +29,10 @@ namespace KurumsalWebSitesi.WebUI
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Main}/{action=Index}/{id?}");
 
             app.MapStaticAssets();
             app.MapControllerRoute(
