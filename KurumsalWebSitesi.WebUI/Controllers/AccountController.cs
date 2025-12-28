@@ -2,6 +2,7 @@
 using KurumsalWebSitesi.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace KurumsalWebSitesi.WebUI.Controllers
@@ -16,6 +17,11 @@ namespace KurumsalWebSitesi.WebUI.Controllers
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Index(User user)
         {
             return View();
         }
@@ -57,7 +63,27 @@ namespace KurumsalWebSitesi.WebUI.Controllers
         [HttpPost]
         public IActionResult Register(User user)
         {
-            return View();
+            try
+            {
+                user.IsActive = true;
+                user.IsAdmin = false;
+                _context.Users.Add(user);
+                var sonuc = _context.SaveChanges();
+                if (sonuc > 0)
+                {
+                    TempData["Message"] = @"<div class=""alert alert-success alert-dismissible fade show"" role=""alert"">
+  <strong>Kayıt Başarılı!</strong> Üye girişi yaparak size özel fırsatlardan yararlanabilirsiniz.
+  <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
+</div>";
+                    return RedirectToAction("Login");
+                }
+                ModelState.AddModelError("", "Kayıt Başarısız!");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "Hata Oluştu!");
+            }
+            return View(user);
         }
     }
 }

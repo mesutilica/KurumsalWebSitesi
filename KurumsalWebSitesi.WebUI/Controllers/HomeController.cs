@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using KurumsalWebSitesi.Data;
 using KurumsalWebSitesi.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,19 +7,24 @@ namespace KurumsalWebSitesi.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly DatabaseContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(DatabaseContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var model = new HomePageViewModel
+            {
+                Products = _context.Products.Where(p => p.IsActive && p.IsHome),
+                Sliders = _context.Sliders
+            };
+            return View(model);
         }
 
-        public IActionResult Privacy()
+        public IActionResult ContactUs()
         {
             return View();
         }
