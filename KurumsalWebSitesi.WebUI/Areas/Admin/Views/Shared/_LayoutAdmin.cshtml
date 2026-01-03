@@ -38,7 +38,10 @@
                     </ul>
                 </div>
                 <a class="btn btn-info me-2" href="/" target="_blank">Siteyi İncele</a>
-                <a class="btn btn-danger" asp-area="" asp-controller="Account" asp-action="Logout">Oturumu Kapat</a>
+                <span class="btn btn-outline-dark">
+                    Hoşgeldin @User.Identity?.Name
+                </span>
+                <a class="btn btn-danger ms-2" asp-area="" asp-controller="Account" asp-action="Logout">Oturumu Kapat</a>
             </div>
         </nav>
     </header>

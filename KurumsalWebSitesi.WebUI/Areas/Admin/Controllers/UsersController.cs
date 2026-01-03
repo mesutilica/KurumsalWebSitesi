@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using KurumsalWebSitesi.Core.Entities;
+﻿using KurumsalWebSitesi.Core.Entities;
 using KurumsalWebSitesi.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace KurumsalWebSitesi.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "AdminPolicy")]
     public class UsersController : Controller
     {
         private readonly DatabaseContext _context;

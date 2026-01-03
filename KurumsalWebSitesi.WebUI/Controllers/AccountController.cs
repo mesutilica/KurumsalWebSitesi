@@ -1,6 +1,7 @@
 ﻿using KurumsalWebSitesi.Core.Entities;
 using KurumsalWebSitesi.Data;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -15,15 +16,47 @@ namespace KurumsalWebSitesi.WebUI.Controllers
         {
             _context = context;
         }
-
+        [Authorize]
         public IActionResult Index()
         {
-            return View();
+            if (HttpContext.Session.GetInt32("kullaniciId") == null)
+            {
+                return RedirectToAction("Logout");
+            }
+            var kullanici = _context.Users.FirstOrDefault(x => x.IsActive && x.Id == HttpContext.Session.GetInt32("kullaniciId"));
+            if (kullanici == null)
+            {
+                return NotFound("Kullanıcı Bulunamadı ya da Üyelik Pasif Edilmiş!");
+            }
+            return View(kullanici);
         }
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult Index(User user)
         {
-            return View();
+            if (HttpContext.Session.GetInt32("kullaniciId") == null)
+            {
+                return RedirectToAction("Logout");
+            }
+            var kullanici = _context.Users.FirstOrDefault(x => x.IsActive && x.Id == HttpContext.Session.GetInt32("kullaniciId"));
+            if (kullanici == null)
+            {
+                return NotFound("Kullanıcı Bulunamadı ya da Üyelik Pasif Edilmiş!");
+            }
+            kullanici.Name = user.Name;
+            kullanici.Surname = user.Surname;
+            kullanici.Email = user.Email;
+            kullanici.Password = user.Password;
+            var sonuc = _context.SaveChanges();
+            if (sonuc > 0)
+            {
+                TempData["Message"] = @"<div class=""alert alert-success alert-dismissible fade show"" role=""alert"">
+  <strong>Kayıt Güncelleme Başarılı!</strong>
+  <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
+</div>";
+                return RedirectToAction("Index");
+            }
+            ModelState.AddModelError("", "Kayıt Başarısız!");
+            return View(user);
         }
         public IActionResult Login()
         {
@@ -35,8 +68,10 @@ namespace KurumsalWebSitesi.WebUI.Controllers
             var kullanici = _context.Users.FirstOrDefault(x => x.IsActive && x.Email == user.Email && x.Password == user.Password);
             if (kullanici != null)
             {
+                HttpContext.Session.SetInt32("kullaniciId", kullanici.Id);
                 var haklar = new List<Claim>() // kullanıcı hakları tanımladık
                     {
+                        new(ClaimTypes.Name, kullanici.Name),
                         new(ClaimTypes.Email, kullanici.Email), // claim = hak(kullanıcıya tanımlalan haklar)
                         new(ClaimTypes.Role, kullanici.IsAdmin ? "Admin" : "User") // giriş yapan kullanıcı admin ise admin yetkisiyle değilse user yetkisiyle giriş yasın.
                     };
@@ -84,6 +119,10 @@ namespace KurumsalWebSitesi.WebUI.Controllers
                 ModelState.AddModelError("", "Hata Oluştu!");
             }
             return View(user);
+        }
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

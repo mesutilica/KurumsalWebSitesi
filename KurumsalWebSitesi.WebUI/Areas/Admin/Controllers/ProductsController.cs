@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace KurumsalWebSitesi.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Policy = "AdminPolicy")]
     public class ProductsController : Controller
     {
         private readonly DatabaseContext _context;

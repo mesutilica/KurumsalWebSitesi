@@ -1,5 +1,6 @@
 using KurumsalWebSitesi.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace KurumsalWebSitesi.WebUI
 {
@@ -16,6 +17,14 @@ namespace KurumsalWebSitesi.WebUI
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
+            builder.Services.AddAuthorization(X =>
+            {
+                X.AddPolicy("AdminPolicy", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+                X.AddPolicy("UserPolicy", policy => policy.RequireClaim(ClaimTypes.Role, "Admin", "User"));
+            });
+
+            builder.Services.AddSession();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -29,6 +38,8 @@ namespace KurumsalWebSitesi.WebUI
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "areas",

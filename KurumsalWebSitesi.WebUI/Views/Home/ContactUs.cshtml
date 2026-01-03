@@ -3,4 +3,66 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>Soru görüş ve önerileriniz için bize ulaşın.</p>
+<div class="container px-5 my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d385399.35201471957!2d28.682532975248!3d41.00485195172458!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa7040068086b%3A0xe1ccfe98bc01b0d0!2zxLBzdGFuYnVs!5e0!3m2!1str!2str!4v1767425092699!5m2!1str!2str" width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="col-lg-6">
+            <div class="card border-0 rounded-3 shadow-lg">
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <div class="h1 fw-light">İletişim Formu</div>
+                        <p class="mb-4 text-muted">Soru görüş ve önerileriniz için bize ulaşın.</p>
+                    </div>
+
+                    <form id="contactForm" data-sb-form-api-token="API_TOKEN">
+
+                        <!-- Name Input -->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="name" type="text" placeholder="Ad" data-sb-validations="required" />
+                            <label for="name">Ad</label>
+                            <div class="invalid-feedback" data-sb-feedback="name:required">Ad gereklidir.</div>
+                        </div>
+
+                        <!-- Email Input -->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="emailAddress" type="email" placeholder="Email" data-sb-validations="required,email" />
+                            <label for="emailAddress">Email</label>
+                            <div class="invalid-feedback" data-sb-feedback="emailAddress:required">Email gereklidir.</div>
+                            <div class="invalid-feedback" data-sb-feedback="emailAddress:email">Email Addresi Geçersiz.</div>
+                        </div>
+
+                        <!-- Message Input -->
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" id="message" type="text" placeholder="Mesaj" style="height: 10rem;" data-sb-validations="required"></textarea>
+                            <label for="message">Mesaj</label>
+                            <div class="invalid-feedback" data-sb-feedback="message:required">Mesaj gereklidir.</div>
+                        </div>
+
+                        <!-- Submit success message -->
+                        <div class="d-none" id="submitSuccessMessage">
+                            <div class="text-center mb-3">
+                                <div class="fw-bolder">Form submission successful!</div>
+                                <p>To activate this form, sign up at</p>
+                                <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
+                            </div>
+                        </div>
+
+                        <!-- Submit error message -->
+                        <div class="d-none" id="submitErrorMessage">
+                            <div class="text-center text-danger mb-3">Error sending message!</div>
+                        </div>
+
+                        <!-- Submit button -->
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Gönder</button>
+                        </div>
+                    </form>
+                    <!-- End of contact form -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

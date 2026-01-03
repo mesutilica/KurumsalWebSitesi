@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace KurumsalWebSitesi.WebUI.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Policy = "AdminPolicy")]
     public class SlidersController : Controller
     {
         private readonly DatabaseContext _context;
