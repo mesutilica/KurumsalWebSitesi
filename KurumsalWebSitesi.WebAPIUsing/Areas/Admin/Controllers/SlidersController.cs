@@ -7,35 +7,39 @@ namespace KurumsalWebSitesi.WebAPIUsing.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Policy = "AdminPolicy")]
-    public class CategoriesController : Controller
+    public class SlidersController : Controller
     {
-        string _apiAdres = "https://localhost:7179/api/categories/";
-        HttpClient _httpClient = new();
+        private readonly HttpClient _httpClient;
+        string _apiAdres = "https://localhost:7179/api/Sliders/";
+        public SlidersController(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
 
-        // GET: CategoriesController
+        // GET: SlidersController
         public async Task<ActionResult> Index()
         {
-            var model = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
+            var model = await _httpClient.GetFromJsonAsync<List<Slider>>(_apiAdres);
             return View(model);
         }
 
-        // GET: CategoriesController/Details/5
+        // GET: SlidersController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + id);
+            var model = await _httpClient.GetFromJsonAsync<Slider>(_apiAdres + id);
             return View(model);
         }
 
-        // GET: CategoriesController/Create
+        // GET: SlidersController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CategoriesController/Create
+        // POST: SlidersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Category collection, IFormFile? Image)
+        public async Task<ActionResult> CreateAsync(Slider collection, IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
@@ -59,17 +63,17 @@ namespace KurumsalWebSitesi.WebAPIUsing.Areas.Admin.Controllers
             return View(collection);
         }
 
-        // GET: CategoriesController/Edit/5
+        // GET: SlidersController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
-            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + id);
+            var model = await _httpClient.GetFromJsonAsync<Slider>(_apiAdres + id);
             return View(model);
         }
 
-        // POST: CategoriesController/Edit/5
+        // POST: SlidersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, Category collection, IFormFile? Image)
+        public async Task<ActionResult> EditAsync(int id, Slider collection, IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
@@ -93,17 +97,17 @@ namespace KurumsalWebSitesi.WebAPIUsing.Areas.Admin.Controllers
             return View(collection);
         }
 
-        // GET: CategoriesController/Delete/5
+        // GET: SlidersController/Delete/5
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + id);
+            var model = await _httpClient.GetFromJsonAsync<Slider>(_apiAdres + id);
             return View(model);
         }
 
-        // POST: CategoriesController/Delete/5
+        // POST: SlidersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, Category collection)
+        public async Task<ActionResult> DeleteAsync(int id, Slider collection)
         {
             try
             {

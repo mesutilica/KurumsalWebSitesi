@@ -12,7 +12,10 @@ namespace KurumsalWebSitesi.Data
         public DbSet<User> Users { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            // lokal db bağlantı
             optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB; Database=KurumsalWebSitesi; integrated security=true; TrustServerCertificate=True;").ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+            // canlı db bağlantı
+            // optionsBuilder.UseSqlServer("Server=84.18.158.34; Database=KurumsalWebSitesi; username=canlı db kullancı adı; password=canlı db şifre; TrustServerCertificate=True;").ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

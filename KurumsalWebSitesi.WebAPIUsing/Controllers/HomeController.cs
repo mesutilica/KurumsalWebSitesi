@@ -1,3 +1,4 @@
+using KurumsalWebSitesi.Core.Entities;
 using KurumsalWebSitesi.WebAPIUsing.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -6,19 +7,28 @@ namespace KurumsalWebSitesi.WebAPIUsing.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        string _apiAdres = "https://localhost:7179/api/";
+        private readonly HttpClient _httpClient;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(HttpClient httpClient)
         {
-            _logger = logger;
+            _httpClient = httpClient;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            var products = await _httpClient.GetFromJsonAsync<List<Product>>(_apiAdres + "Products");
+            var sliders = await _httpClient.GetFromJsonAsync<List<Slider>>(_apiAdres + "Sliders");
+
+            var model = new HomePageViewModel
+            {
+                Products = products.Where(p => p.IsActive && p.IsHome),
+                Sliders = sliders
+            };
+            return View(model);
         }
 
-        public IActionResult Privacy()
+        public IActionResult ContactUs()
         {
             return View();
         }

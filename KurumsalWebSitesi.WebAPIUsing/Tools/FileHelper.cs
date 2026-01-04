@@ -1,4 +1,4 @@
-﻿namespace KurumsalWebSitesi.WebUI.Tools
+﻿namespace KurumsalWebSitesi.WebAPIUsing.Tools
 {
     public class FileHelper
     {

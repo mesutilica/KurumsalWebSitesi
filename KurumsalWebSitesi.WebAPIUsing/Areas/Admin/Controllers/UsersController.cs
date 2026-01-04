@@ -1,5 +1,4 @@
 ﻿using KurumsalWebSitesi.Core.Entities;
-using KurumsalWebSitesi.WebAPIUsing.Tools;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,44 +6,43 @@ namespace KurumsalWebSitesi.WebAPIUsing.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Policy = "AdminPolicy")]
-    public class CategoriesController : Controller
+    public class UsersController : Controller
     {
-        string _apiAdres = "https://localhost:7179/api/categories/";
-        HttpClient _httpClient = new();
-
-        // GET: CategoriesController
+        private readonly HttpClient _httpClient;
+        string _apiAdres = "https://localhost:7179/api/Users/";
+        public UsersController(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+        // GET: UsersController
         public async Task<ActionResult> Index()
         {
-            var model = await _httpClient.GetFromJsonAsync<List<Category>>(_apiAdres);
+            var model = await _httpClient.GetFromJsonAsync<List<User>>(_apiAdres);
             return View(model);
         }
 
-        // GET: CategoriesController/Details/5
+        // GET: UsersController/Details/5
         public async Task<ActionResult> DetailsAsync(int id)
         {
-            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + id);
+            var model = await _httpClient.GetFromJsonAsync<User>(_apiAdres + id);
             return View(model);
         }
 
-        // GET: CategoriesController/Create
+        // GET: UsersController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CategoriesController/Create
+        // POST: UsersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Category collection, IFormFile? Image)
+        public async Task<ActionResult> CreateAsync(User collection)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Image is not null)
-                    {
-                        collection.Image = FileHelper.FileLoader(Image);
-                    }
                     var response = await _httpClient.PostAsJsonAsync(_apiAdres, collection);
                     if (response.IsSuccessStatusCode)
                         return RedirectToAction(nameof(Index));
@@ -59,26 +57,22 @@ namespace KurumsalWebSitesi.WebAPIUsing.Areas.Admin.Controllers
             return View(collection);
         }
 
-        // GET: CategoriesController/Edit/5
+        // GET: UsersController/Edit/5
         public async Task<ActionResult> EditAsync(int id)
         {
-            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + id);
+            var model = await _httpClient.GetFromJsonAsync<User>(_apiAdres + id);
             return View(model);
         }
 
-        // POST: CategoriesController/Edit/5
+        // POST: UsersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(int id, Category collection, IFormFile? Image)
+        public async Task<ActionResult> EditAsync(int id, User collection)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (Image is not null)
-                    {
-                        collection.Image = FileHelper.FileLoader(Image);
-                    }
                     var response = await _httpClient.PutAsJsonAsync(_apiAdres + id, collection);
                     if (response.IsSuccessStatusCode)
                         return RedirectToAction(nameof(Index));
@@ -93,27 +87,23 @@ namespace KurumsalWebSitesi.WebAPIUsing.Areas.Admin.Controllers
             return View(collection);
         }
 
-        // GET: CategoriesController/Delete/5
+        // GET: UsersController/Delete/5
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            var model = await _httpClient.GetFromJsonAsync<Category>(_apiAdres + id);
+            var model = await _httpClient.GetFromJsonAsync<User>(_apiAdres + id);
             return View(model);
         }
 
-        // POST: CategoriesController/Delete/5
+        // POST: UsersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, Category collection)
+        public async Task<ActionResult> DeleteAsync(int id, User collection)
         {
             try
             {
                 var response = await _httpClient.DeleteAsync(_apiAdres + id);
                 if (response.IsSuccessStatusCode)
                 {
-                    if (!string.IsNullOrEmpty(collection.Image))
-                    {
-                        FileHelper.FileRemover(collection.Image);
-                    }
                     return RedirectToAction(nameof(Index));
                 }
                 ModelState.AddModelError("", "Kayıt Silinemedi!");
